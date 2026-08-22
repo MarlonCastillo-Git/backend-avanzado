@@ -38,13 +38,13 @@ class Product extends Model
         ]
     */
     
-    public function productsByCategory(){
+    public static function productsByCategory()
+    {
         return DB::table('products')
-                ->join('categories', 'categories_id', '=', 'prodcuts.category_id')
-                ->select('categories.name as categoria', DB::raw('count(*) as total_productos'))
-                ->groupBy('categories.name')
-                ->orderByDesc('total_productos')
-                ->get();
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->select('categories.name as categoria', DB::raw('count(*) as total_productos'))
+            ->groupBy('categories.name')
+            ->orderByDesc('total_productos')
+            ->get();
     }
-
 }

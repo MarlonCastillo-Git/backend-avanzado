@@ -6,6 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\User;
 
 class OrderController extends Controller
 {
@@ -14,7 +15,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return OrderResource::collection(Order::with('client')->paginate(10));
+        return OrderResource::collection(Order::with('user')->paginate(10));
     }
 
     /**
@@ -24,7 +25,7 @@ class OrderController extends Controller
     {
         $order = Order::create($request->validated());
         
-        return (new OrderResource($order->load('client')))->response()->setStatusCode(201);
+        return (new OrderResource($order->load('user')))->response()->setStatusCode(201);
     }
 
     /**
@@ -32,7 +33,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return new OrderResource($order->load('client'));
+        return new OrderResource($order->load('user'));
     }
 
     /**

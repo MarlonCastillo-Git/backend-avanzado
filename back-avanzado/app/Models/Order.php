@@ -7,9 +7,9 @@ use App\Models\Client;
 
 class Order extends Model
 {
-    protected $fillable = ['total', 'status', 'client_id'];
+    protected $fillable = ['total', 'status', 'user_id'];
 
     public function client(){
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(User::class);
     }
 }

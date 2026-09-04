@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+ 
 
 class AuthController extends Controller
 {
@@ -39,10 +40,22 @@ class AuthController extends Controller
             return response()->json(['message' => 'Credenciales invalidas'], 401);
         }
 
-        return response()->json(['message' => 'Login exitoso', 'user' => $user], 200);
+        $credentials = $request->only('email', 'password');
+
+        if (! $token = auth('api')->attempt($credentials)){
+            return response()->json(['message' => 'No Autorizado'], 401);
+        }
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() *60,
+        ]);
+
+        //return response()->json(['message' => 'Login exitoso', 'user' => $user], 200);
     }
 
-    public function me(Request $request){
+    /*public function me(Request $request){
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
@@ -50,6 +63,10 @@ class AuthController extends Controller
         $user = User::find($request->user_id);
 
         return response()->json($user);
+    }*/
+
+    public function me(){
+        return response()->json(auth('api')->user());
     }
 
     public function meByEmail(Request $request){
@@ -60,6 +77,11 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         return response()->json($user);
+    }
+
+    public function logout() {
+        auth('api')->logout();
+        return response()->json(['message' => 'Sesión cerrada exitosamente']);
     }
 
 }

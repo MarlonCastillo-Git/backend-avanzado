@@ -9,7 +9,7 @@ class Order extends Model
 {
     protected $fillable = ['total', 'status', 'user_id'];
 
-    public function client(){
+    public function user(){
         return $this->belongsTo(User::class);
     }
 }

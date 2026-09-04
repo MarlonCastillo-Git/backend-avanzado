@@ -32,3 +32,5 @@ Route::middleware('auth:api')->group(function () {
 
 
 Route::get('/meByEmail', [AuthController::class, 'meByEmail']);
+
+Route::delete('/orders/{order}', [OrderController::class, 'destroy']);
